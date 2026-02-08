@@ -24,7 +24,6 @@
 
         .header { padding: 50px 20px 20px; text-align: center; }
         
-        /* লোগো সেকশন - রিমুভ বিজি লোগোর জন্য অপ্টিমাইজড */
         .logo-container {
             width: 120px; height: 120px; 
             margin: 0 auto 15px;
@@ -138,8 +137,9 @@
 </footer>
 
 <script>
+    // --- আপনার দেওয়া আসল API Key এবং App ID দিয়ে কানেক্ট করা হলো (b) ---
     const firebaseConfig = {
-        apiKey: "AIzaSyB-DYourActualApiKeyGoesHere", 
+        apiKey: "BNocki1QchccvnpQxZFHnrOzQvVGymv0VllaaY9A3BsvE0MuDHrPIJbimP5cn-3Ut3p22oqFpslclocDoS26_tk", 
         projectId: "sylhety-empire-e-sports",
         appId: "1:150675737506:android:568ab09e0a529d41fd00fb"
     };
@@ -147,17 +147,24 @@
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
+    // Firestore থেকে ডাটা কানেক্ট করা হচ্ছে (b)
     db.collection("AppSettings").doc("latestApp").onSnapshot((doc) => {
         if (doc.exists) {
             const data = doc.data();
             const btn = document.getElementById('dlBtn');
-            btn.href = data.apk_link;
-            document.getElementById('btnTxt').innerText = "INSTALL APP (b)";
-            if(data.size) document.getElementById('appSizeDisplay').innerText = data.size;
-            btn.style.opacity = "1";
-            btn.style.pointerEvents = "auto";
+            
+            if (data.apk_link) {
+                btn.href = data.apk_link;
+                document.getElementById('btnTxt').innerText = "INSTALL APP (b)";
+                btn.style.opacity = "1";
+                btn.style.pointerEvents = "auto";
+            }
+            
+            if(data.size) {
+                document.getElementById('appSizeDisplay').innerText = data.size;
+            }
         } else {
-            document.getElementById('btnTxt').innerText = "Link Not Found";
+            document.getElementById('btnTxt').innerText = "Update Coming Soon";
         }
     }, (error) => {
         console.error("Firestore Error: ", error);
