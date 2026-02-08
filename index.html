@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Official Download | Sylhety Empire (b)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+    <style>
+        :root { --primary: #0ea5e9; --success: #22c55e; --bg: #020617; --surface: #0f172a; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; text-align: center; }
+        .header { padding: 60px 20px 20px; }
+        .icon { width: 110px; height: 110px; background: linear-gradient(135deg, #0ea5e9, #2563eb); border-radius: 25px; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 55px; font-weight: bold; box-shadow: 0 10px 30px rgba(14,165,233,0.4); border: 2px solid rgba(255,255,255,0.1); }
+        .badge-row { display: flex; justify-content: center; gap: 15px; margin: 20px 0; font-size: 12px; color: #94a3b8; }
+        .badge { background: rgba(255,255,255,0.05); padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
+        .main-card { background: var(--surface); width: 85%; max-width: 400px; padding: 30px; border-radius: 32px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+        .dl-btn { background: #fff; color: #000; text-decoration: none; padding: 18px; border-radius: 18px; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 800; font-size: 18px; transition: 0.3s; margin-bottom: 15px; }
+        .dl-btn:hover { transform: scale(1.02); }
+        .verified { color: var(--success); font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .info-list { text-align: left; margin-top: 25px; font-size: 13px; color: #cbd5e1; }
+        .info-item { margin-bottom: 10px; display: flex; gap: 10px; align-items: center; }
+        .info-item i { color: var(--primary); }
+        .guide { margin-top: 25px; padding: 15px; background: rgba(245, 158, 11, 0.1); border-radius: 15px; border: 1px solid #f59e0b; font-size: 12px; color: #f59e0b; text-align: left; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="icon">S</div>
+    <h1 style="margin:0; font-size: 28px;">Sylhety Empire</h1>
+    <p style="color:var(--primary); font-weight:600; margin:5px 0;">Official E-Sports Store (b)</p>
+</div>
+
+<div class="badge-row">
+    <div class="badge"><i class="fas fa-star" style="color:#fbbf24"></i> 4.9 Rating</div>
+    <div class="badge">100% Secure</div>
+</div>
+
+<div class="main-card">
+    <a href="#" id="dlBtn" class="dl-btn" style="opacity: 0.6; pointer-events: none;">
+        <i class="fas fa-download"></i> <span id="btnTxt">লোড হচ্ছে...</span>
+    </a>
+    <div class="verified">
+        <i class="fas fa-shield-check"></i> Verified by Google Play Protect (b)
+    </div>
+
+    <div class="info-list">
+        <div class="info-item"><i class="fas fa-bolt"></i> ফাস্ট উইথড্র এবং অটো টুর্নামেন্ট সিস্টেম।</div>
+        <div class="info-item"><i class="fas fa-user-shield"></i> আপনার ডাটা সম্পূর্ণ এনক্রিপ্টেড এবং সুরক্ষিত।</div>
+    </div>
+
+    <div class="guide">
+        <b>নির্দেশনা:</b> ব্রাউজার থেকে ডাউনলোড করার সময় কোনো ওয়ার্নিং আসলে ভয় পাবেন না। এটি আমাদের অফিশিয়াল অ্যাপ, তাই নিশ্চিন্তে <b>"Install Anyway"</b> ক্লিক করুন।
+    </div>
+</div>
+
+<footer style="margin-top:40px; color:#475569; font-size:11px;">
+    &copy; 2026 SYLHETY EMPIRE (b) | Powered by Firebase
+</footer>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        projectId: "sylhety-empire-e-sports",
+        appId: "YOUR_APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    db.collection("AppSettings").doc("latestApp").onSnapshot((doc) => {
+        if (doc.exists) {
+            const data = doc.data();
+            const btn = document.getElementById('dlBtn');
+            btn.href = data.apk_link;
+            document.getElementById('btnTxt').innerText = "INSTALL APP";
+            btn.style.opacity = "1";
+            btn.style.pointerEvents = "auto";
+        }
+    });
+</script>
+</body>
+</html>
