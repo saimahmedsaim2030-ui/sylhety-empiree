@@ -25,29 +25,15 @@
         .header { padding: 50px 20px 20px; text-align: center; }
         
         .logo-container {
-            width: 120px; height: 120px; 
-            margin: 0 auto 15px;
-            position: relative;
-            display: flex; align-items: center; justify-content: center;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-            box-shadow: 0 0 30px rgba(0, 210, 255, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            overflow: hidden;
-            animation: pulse 2.5s infinite;
+            width: 120px; height: 120px; margin: 0 auto 15px;
+            position: relative; display: flex; align-items: center; justify-content: center;
+            background: rgba(255, 255, 255, 0.05); border-radius: 50%;
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.3); border: 2px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden; animation: pulse 2.5s infinite;
         }
 
-        .app-logo-img { 
-            width: 90%; height: 90%; 
-            object-fit: contain;
-            position: absolute;
-            z-index: 2;
-        }
-
-        .logo-placeholder {
-            font-size: 60px; font-weight: 900; color: rgba(255,255,255,0.2);
-            z-index: 1;
-        }
+        .app-logo-img { width: 90%; height: 90%; object-fit: contain; position: absolute; z-index: 2; }
+        .logo-placeholder { font-size: 60px; font-weight: 900; color: rgba(255,255,255,0.2); z-index: 1; }
 
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
@@ -71,11 +57,19 @@
             background: linear-gradient(135deg, #fff, #e0e0e0); color: #000; 
             text-decoration: none; padding: 18px; border-radius: 20px; 
             display: flex; align-items: center; justify-content: center; gap: 12px; 
-            font-weight: 800; font-size: 18px; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            margin-bottom: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            cursor: pointer; border: none; width: 100%;
+            font-weight: 800; font-size: 18px; transition: 0.3s; 
+            margin-bottom: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            width: 100%; box-sizing: border-box; cursor: pointer; border: none;
         }
         .dl-btn:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0, 210, 255, 0.3); }
+
+        .tg-btn {
+            background: rgba(0, 136, 204, 0.1); color: #0088cc;
+            text-decoration: none; padding: 12px; border-radius: 15px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            font-weight: 600; font-size: 14px; border: 1px solid rgba(0, 136, 204, 0.3);
+            transition: 0.3s; margin-bottom: 15px;
+        }
 
         .verified { color: var(--success); font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; }
 
@@ -115,9 +109,13 @@
 </div>
 
 <div class="main-card">
-    <button id="dlBtn" class="dl-btn" style="opacity: 0.6; pointer-events: none;" onclick="startDirectDownload()">
+    <a id="dlBtn" href="#" class="dl-btn" style="opacity: 0.6; pointer-events: none;" onclick="updateCounter()">
         <i class="fas fa-rocket"></i> <span id="btnTxt">লোড হচ্ছে...</span>
-    </button>
+    </a>
+
+    <a href="https://t.me/SYLHETYEMPIRE" target="_blank" class="tg-btn">
+        <i class="fab fa-telegram-plane"></i> অ্যাপে সমস্যা হলে এখানে জানান
+    </a>
     
     <div class="verified">
         <i class="fas fa-shield-alt"></i> Official Verified Secure (b)
@@ -129,7 +127,7 @@
     </div>
 
     <div class="guide">
-        <i class="fas fa-info-circle"></i> <b>কিভাবে ইনস্টল করবেন:</b> ডাউনলোড শেষে ফাইলটি খুলুন। যদি গুগল কোনো মেসেজ দেয়, তবে <b>'Install anyway'</b> তে ক্লিক করুন। এটি আমাদের অফিসিয়াল ভার্সন (b)।
+        <i class="fas fa-info-circle"></i> <b>কিভাবে ইনস্টল করবেন:</b> ডাউনলোড শেষে ফাইলটি খুলুন। <b>'SYLHETY E-SPORTS TOUR.apk'</b> ফাইলটি ইনস্টল করুন। যদি গুগল কোনো মেসেজ দেয়, তবে <b>'Install anyway'</b> তে ক্লিক করুন। এটি আমাদের অফিসিয়াল ভার্সন (b)।
     </div>
 </div>
 
@@ -147,58 +145,29 @@
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    let currentApkLink = "";
-
+    // Firestore থেকে ডাটা রিয়েলটাইমে আপডেট করার ফাংশন (b)
     db.collection("AppSettings").doc("latestApp").onSnapshot((doc) => {
         if (doc.exists) {
             const data = doc.data();
             const btn = document.getElementById('dlBtn');
             
             if (data.apk_link) {
-                currentApkLink = data.apk_link;
+                btn.href = data.apk_link; // গিটহাবের রিলিজ লিঙ্ক এখানে আসবে
                 document.getElementById('btnTxt').innerText = "INSTALL APP (b)";
                 btn.style.opacity = "1";
                 btn.style.pointerEvents = "auto";
             }
             
-            if(data.size) {
-                document.getElementById('appSizeDisplay').innerText = data.size;
-            }
-
-            if(data.download_count) {
-                document.getElementById('dlCountDisplay').innerText = data.download_count + "+";
-            }
-        } else {
-            document.getElementById('btnTxt').innerText = "Update Coming Soon";
+            if(data.size) document.getElementById('appSizeDisplay').innerText = data.size;
+            if(data.download_count) document.getElementById('dlCountDisplay').innerText = data.download_count + "+";
         }
-    }, (error) => {
-        console.error("Firestore Error: ", error);
-        document.getElementById('btnTxt').innerText = "Connection Error";
     });
 
-    function startDirectDownload() {
-        if (currentApkLink !== "") {
-            // ১. ফায়ারস্টোরে কাউন্ট আপডেট করা (b)
-            const docRef = db.collection("AppSettings").doc("latestApp");
-            docRef.update({
-                download_count: firebase.firestore.FieldValue.increment(1)
-            }).catch(e => console.log("Counter update failed"));
-
-            // ২. মিডিয়াফায়ার ডাইরেক্ট ডাউনলোড লজিক (b)
-            // এটি মিডিয়াফায়ার পেজ বাইপাস করার চেষ্টা করবে
-            let directLink = currentApkLink.replace("www.mediafire.com/file/", "download.mediafire.com/");
-            if(directLink.endsWith("/file")) {
-                directLink = directLink.replace("/file", "");
-            }
-
-            // সরাসরি ডাউনলোড ট্রিগার করা
-            const hiddenLink = document.createElement('a');
-            hiddenLink.href = directLink;
-            hiddenLink.target = '_self'; 
-            document.body.appendChild(hiddenLink);
-            hiddenLink.click();
-            document.body.removeChild(hiddenLink);
-        }
+    // ডাউনলোড কাউন্টার বাড়ানোর ফাংশন (b)
+    function updateCounter() {
+        db.collection("AppSettings").doc("latestApp").update({
+            download_count: firebase.firestore.FieldValue.increment(1)
+        }).catch(err => console.log("Counter update error"));
     }
 </script>
 </body>
