@@ -72,10 +72,20 @@
             text-decoration: none; padding: 18px; border-radius: 20px; 
             display: flex; align-items: center; justify-content: center; gap: 12px; 
             font-weight: 800; font-size: 18px; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            margin-bottom: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            margin-bottom: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
             cursor: pointer; border: none; width: 100%;
         }
         .dl-btn:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0, 210, 255, 0.3); }
+
+        /* Telegram Help Button Style (b) */
+        .tg-btn {
+            background: rgba(0, 136, 204, 0.1); color: #0088cc;
+            text-decoration: none; padding: 12px; border-radius: 15px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            font-weight: 600; font-size: 14px; border: 1px solid rgba(0, 136, 204, 0.3);
+            transition: 0.3s; margin-bottom: 15px;
+        }
+        .tg-btn:hover { background: rgba(0, 136, 204, 0.2); transform: scale(1.02); }
 
         .verified { color: var(--success); font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; }
 
@@ -118,6 +128,10 @@
     <button id="dlBtn" class="dl-btn" style="opacity: 0.6; pointer-events: none;" onclick="startDirectDownload()">
         <i class="fas fa-rocket"></i> <span id="btnTxt">লোড হচ্ছে...</span>
     </button>
+
+    <a href="https://t.me/SYLHETYEMPIRE" target="_blank" class="tg-btn">
+        <i class="fab fa-telegram-plane"></i> অ্যাপে সমস্যা হলে এখানে জানান
+    </a>
     
     <div class="verified">
         <i class="fas fa-shield-alt"></i> Official Verified Secure (b)
@@ -138,7 +152,6 @@
 </footer>
 
 <script>
-    // --- আপনার দেওয়া আসল API Key এবং App ID দিয়ে কানেক্ট করা হলো (b) ---
     const firebaseConfig = {
         apiKey: "BNocki1QchccvnpQxZFHnrOzQvVGymv0VllaaY9A3BsvE0MuDHrPIJbimP5cn-3Ut3p22oqFpslclocDoS26_tk", 
         projectId: "sylhety-empire-e-sports",
@@ -150,7 +163,6 @@
 
     let currentApkLink = "";
 
-    // Firestore থেকে ডাটা কানেক্ট করা হচ্ছে (b)
     db.collection("AppSettings").doc("latestApp").onSnapshot((doc) => {
         if (doc.exists) {
             const data = doc.data();
@@ -167,7 +179,6 @@
                 document.getElementById('appSizeDisplay').innerText = data.size;
             }
 
-            // ডাউনলোড কাউন্ট দেখানোর জন্য (যদি ডাটাবেজে থাকে)
             if(data.download_count) {
                 document.getElementById('dlCountDisplay').innerText = data.download_count + "+";
             }
@@ -179,20 +190,21 @@
         document.getElementById('btnTxt').innerText = "Connection Error";
     });
 
-    // সরাসরি ডাউনলোড এবং কাউন্টার বাড়ানোর ফাংশন (b)
     function startDirectDownload() {
         if (currentApkLink !== "") {
-            // ১. ফায়ারস্টোরে কাউন্ট আপডেট করা (b)
             const docRef = db.collection("AppSettings").doc("latestApp");
             docRef.update({
                 download_count: firebase.firestore.FieldValue.increment(1)
             }).catch(e => console.log("Counter update failed"));
 
-            // ২. সরাসরি ডাউনলোড শুরু করা (নতুন উইন্ডো ছাড়াই) (b)
+            let directLink = currentApkLink.replace("www.mediafire.com/file/", "download.mediafire.com/");
+            if(directLink.endsWith("/file")) {
+                directLink = directLink.replace("/file", "");
+            }
+
             const hiddenLink = document.createElement('a');
-            hiddenLink.href = currentApkLink;
-            hiddenLink.target = '_self'; // একই উইন্ডোতে ডাউনলোড শুরু হবে
-            hiddenLink.download = "Sylhety_Empire.apk"; // ফাইলের নাম সেট করা
+            hiddenLink.href = directLink;
+            hiddenLink.target = '_self'; 
             document.body.appendChild(hiddenLink);
             hiddenLink.click();
             document.body.removeChild(hiddenLink);
