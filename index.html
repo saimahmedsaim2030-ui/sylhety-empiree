@@ -72,20 +72,10 @@
             text-decoration: none; padding: 18px; border-radius: 20px; 
             display: flex; align-items: center; justify-content: center; gap: 12px; 
             font-weight: 800; font-size: 18px; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            margin-bottom: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            margin-bottom: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
             cursor: pointer; border: none; width: 100%;
         }
         .dl-btn:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0, 210, 255, 0.3); }
-
-        /* Telegram Help Button Design (b) */
-        .tg-btn {
-            background: rgba(0, 136, 204, 0.1); color: #0088cc;
-            text-decoration: none; padding: 12px; border-radius: 15px;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            font-weight: 600; font-size: 14px; border: 1px solid rgba(0, 136, 204, 0.3);
-            transition: 0.3s; margin-bottom: 15px;
-        }
-        .tg-btn:hover { background: rgba(0, 136, 204, 0.2); transform: scale(1.02); }
 
         .verified { color: var(--success); font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; }
 
@@ -128,10 +118,6 @@
     <button id="dlBtn" class="dl-btn" style="opacity: 0.6; pointer-events: none;" onclick="startDirectDownload()">
         <i class="fas fa-rocket"></i> <span id="btnTxt">লোড হচ্ছে...</span>
     </button>
-
-    <a href="https://t.me/SYLHETYEMPIRE" target="_blank" class="tg-btn">
-        <i class="fab fa-telegram-plane"></i> অ্যাপে সমস্যা হলে এখানে জানান
-    </a>
     
     <div class="verified">
         <i class="fas fa-shield-alt"></i> Official Verified Secure (b)
@@ -199,11 +185,13 @@
             }).catch(e => console.log("Counter update failed"));
 
             // ২. মিডিয়াফায়ার ডাইরেক্ট ডাউনলোড লজিক (b)
+            // এটি মিডিয়াফায়ার পেজ বাইপাস করার চেষ্টা করবে
             let directLink = currentApkLink.replace("www.mediafire.com/file/", "download.mediafire.com/");
             if(directLink.endsWith("/file")) {
                 directLink = directLink.replace("/file", "");
             }
 
+            // সরাসরি ডাউনলোড ট্রিগার করা
             const hiddenLink = document.createElement('a');
             hiddenLink.href = directLink;
             hiddenLink.target = '_self'; 
